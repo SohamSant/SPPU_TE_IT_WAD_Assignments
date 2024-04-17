@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2D Character Movement</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f0f0f0;
+    }
+    #character {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+</style>
+</head>
+<body>
+
+<div id="character"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var character = document.getElementById("character");
+        var speed = 20;
+        var jumpForce = 12;
+        var gravity = 9.8;
+        var isJumping = false;
+        
+        function moveCharacter(direction) {
+            var currentPosition = parseFloat(window.getComputedStyle(character).getPropertyValue("left"));
+            if (direction === "left") {
+                character.style.left = (currentPosition - speed) + "px";
+            } else if (direction === "right") {
+                character.style.left = (currentPosition + speed) + "px";
+            }
+        }
+        
+        function jump() {
+            if (!isJumping) {
+                isJumping = true;
+                var jumpInterval = setInterval(function() {
+                    var currentPosition = parseFloat(window.getComputedStyle(character).getPropertyValue("bottom"));
+                    if (currentPosition >= 200) {
+                        clearInterval(jumpInterval);
+                        var fallInterval = setInterval(function() {
+                            var currentPosition = parseFloat(window.getComputedStyle(character).getPropertyValue("bottom"));
+                            if (currentPosition <= 0) {
+                                clearInterval(fallInterval);
+                                character.style.bottom = "0px";
+                                isJumping = false;
+                            } else {
+                                character.style.bottom = (currentPosition - gravity) + "px";
+                            }
+                        }, 10);
+                    } else {
+                        character.style.bottom = (currentPosition + jumpForce) + "px";
+                    }
+                }, 10);
+            }
+        }
+        
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                moveCharacter("left");
+            } else if (event.key === "ArrowRight") {
+                moveCharacter("right");
+            } else if (event.key === "ArrowUp") {
+                jump();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

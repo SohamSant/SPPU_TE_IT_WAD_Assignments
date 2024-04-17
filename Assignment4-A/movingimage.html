@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+        $(document).on("pagecreate", function() {
+            var image = $("#myImage");
+            var startX, startY, currentX, currentY;
+            var swipeThreshold = 50;
+
+            image.on("vmousedown", function(event) {
+                startX = event.originalEvent.touches[0].pageX;
+                startY = event.originalEvent.touches[0].pageY;
+            });
+
+            image.on("vmousemove", function(event) {
+                currentX = event.originalEvent.touches[0].pageX;
+                currentY = event.originalEvent.touches[0].pageY;
+            });
+
+            image.on("vmouseup", function(event) {
+                var deltaX = currentX - startX;
+                var deltaY = currentY - startY;
+
+                if (Math.abs(deltaX) > swipeThreshold) {
+                    if (deltaX > 0) {
+                        // Swiped right
+                        image.animate({ left: "+=100px" }, "slow");
+                    } else {
+                        // Swiped left
+                        image.animate({ left: "-=100px" }, "slow");
+                    }
+                }
+
+                if (Math.abs(deltaY) > swipeThreshold) {
+                    if (deltaY > 0) {
+                        // Swiped down
+                        image.animate({ top: "+=100px" }, "slow");
+                    } else {
+                        // Swiped up
+                        image.animate({ top: "-=100px" }, "slow");
+                    }
+                }
+            });
+
+            $(document).keydown(function(event) {
+                switch (event.which) {
+                    case 37: // left arrow
+                        image.animate({ left: "-=100px" }, "fast");
+                        break;
+                    case 38: // up arrow
+                        image.animate({ top: "-=100px" }, "fast");
+                        break;
+                    case 39: // right arrow
+                        image.animate({ left: "+=100px" }, "fast");
+                        break;
+                    case 40: // down arrow
+                        image.animate({ top: "+=100px" }, "fast");
+                        break;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div data-role="page">
+        <div data-role="header">
+            <h1>Move Image</h1>
+        </div>
+        <div>
+            <table>
+
+                <a href="#" id="leftButton" class="ui-btn ui-icon-carat-l ui-btn-icon-notext ui-corner-all">Left</a>
+                <a href="#" id="upButton" class="ui-btn ui-icon-carat-u ui-btn-icon-notext ui-corner-all">Up</a>
+                <a href="#" id="rightButton" class="ui-btn ui-icon-carat-r ui-btn-icon-notext ui-corner-all">Right</a>
+                <a href="#" id="downButton" class="ui-btn ui-icon-carat-d ui-btn-icon-notext ui-corner-all">Down</a>
+            </table>
+        </div>
+        <!-- <div data-role="main" class="ui-content"> -->
+            <p>Swipe or use arrow keys to move the image.</p>
+            <img id="myImage" src="pngegg.png" style="position: relative;">
+        <!-- </div> -->
+        <!-- <div data-role="footer">
+            <h1>Footer</h1>
+        </div> -->
+    </div>
+</body>
+</html>
